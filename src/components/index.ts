@@ -1,1 +1,1 @@
-export * from './NewComponent'
+export * from './FeedPost'
