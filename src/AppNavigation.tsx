@@ -15,7 +15,6 @@ const AppStack = () => {
       <Stack.Screen name={'PostDetailsScreen'} component={HomeScreen}></Stack.Screen>
       <Stack.Screen name={'ProfileScreen'} component={HomeScreen}></Stack.Screen>
       <Stack.Screen name={'AboutScreen'} component={HomeScreen}></Stack.Screen>
-
     </Stack.Navigator>
   )
 }

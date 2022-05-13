@@ -2,16 +2,21 @@
 
 import AppNavigation from './src/AppNavigation';
 import React from 'react';
-// import { TabNavigator } from './src/AppNavigation';
+import { Provider } from "react-redux";
+import configureStore from "./src/redux/Store";
 import { SafeAreaView, StyleSheet, View, TouchableOpacity } from 'react-native';
+import { PersistGate } from "redux-persist/integration/react";
+
 
 const App = () => {
 
   return (
     <SafeAreaView style={styles.root}>
-      <View style={styles.root}>
-        <AppNavigation/>
-      </View>
+      <Provider store={configureStore().store}>
+        <PersistGate loading={null} persistor={configureStore().persistor}>
+          <AppNavigation/>
+        </PersistGate>
+      </Provider>
     </SafeAreaView>
   );
 };

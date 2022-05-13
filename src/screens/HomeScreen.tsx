@@ -1,25 +1,30 @@
-import { View, Text, StyleSheet, TouchableOpacity, FlatList} from 'react-native'
-import {useState, useEffect} from 'react'
+import { View, Text, StyleSheet, TouchableOpacity, FlatList, Image} from 'react-native'
+import {useState, useEffect, useCallback} from 'react'
 import React from 'react'
-import { Post } from 'models'
-import { HttpService, Apis } from 'services'
+import { Post, PostDetailsScreenProps } from 'models'
+import { HttpService, BASE_URL_IMAGE, Apis } from 'services'
+import { FeedPost } from 'components'
+import { AxiosError } from 'axios'
+import { LoadIndicator } from 'components/LoadIndicator'
+
 
 
 export const HomeScreen = (props: any) => {
   const [posts, setPosts] = useState<Post[]>([])
   const [loading, setLoading] = useState<boolean>(true)
   const [hasError, setHasError] = useState<boolean>(false)
-  useEffect(()=> {
-    
+
+  useEffect(() => {
+    getPosts()
   }, [])
 
   const getPosts = async () => {
     setLoading(true)
-    let data: Post[];
+    let data: Post[] = [];
     try{
-      console.log(Apis.POSTS)
       const resp = await HttpService.getInstance().get(Apis.POSTS)
       data = resp.data
+      console.log('RESPONSE getPosts() ===> ', JSON.stringify(data))
       setHasError(false)
     } catch (e){
       console.error('ERROR getPosts ', e)
@@ -32,26 +37,15 @@ export const HomeScreen = (props: any) => {
 
   return (
     <View style={styles.container}>
-      <Text>HomeScreen</Text>
-      <TouchableOpacity style={styles.buttonStyle} onPress={getPosts}>
-                      <Text>{'Hellos there'}</Text>
-
-        </TouchableOpacity>
+      <LoadIndicator/>
         <FlatList 
           data={posts}
           keyExtractor={item => item.pk.toString()}
           numColumns={3}
+          // initialNumToRender={21}
           style={styles.listStyles}
-          renderItem={({item, index}) => 
-          <TouchableOpacity style={styles.buttonStyle} onPress={() => {console.log('its working')}}>
-                      <Text>{item.pk}</Text>
-
-        </TouchableOpacity>
-
-        }
+          renderItem={({item, index}) => <FeedPost {...item}/>}
         />
-
-        
     </View>
   )
 }
@@ -61,7 +55,7 @@ const styles = StyleSheet.create({
     flex: 1
   },
   listStyles:{
-    
+    marginHorizontal: 2.5
   },
   buttonStyle: {
     height: 50,
@@ -69,4 +63,3 @@ const styles = StyleSheet.create({
     backgroundColor: 'blue'
   }
 })
-

@@ -13,6 +13,7 @@ export class HttpService {
   }
   
   create = (api: string, isImage?: boolean) => {
+
     const a = axios.create({
       baseURL: isImage ? BASE_URL_IMAGE : BASE_URL_API,
       timeout: 15000,
@@ -20,6 +21,7 @@ export class HttpService {
     return a
   }
   get = (api: string, isImage?: boolean) => {
+    console.log('HTTPService get url ==>', api)
     const call = this.create(api, isImage)
     return call.get(api)
   }
