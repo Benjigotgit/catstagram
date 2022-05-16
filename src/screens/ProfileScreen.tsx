@@ -31,7 +31,6 @@ export const ProfileScreen = (props: any) => {
       AppService.showAlert('Opps... Error', JSON.stringify(e))
     }
     AppService.hideLoading()
-
     setLoading(false)
   }
 
@@ -50,6 +49,7 @@ export const ProfileScreen = (props: any) => {
               name={'firstName'}
               errors={errors} 
               label={'First Name:'}
+              errorStyles={styles.errorStyles}
               rules={{
                 required: false,
                 pattern: {
@@ -66,6 +66,7 @@ export const ProfileScreen = (props: any) => {
               name={'lastName'}
               errors={errors} 
               label={'Last Name:'}
+              errorStyles={styles.errorStyles}
               rules={{
                 required: false, 
                 pattern: {
@@ -82,6 +83,7 @@ export const ProfileScreen = (props: any) => {
               name={'email'}
               errors={errors} 
               label={'Email:'}
+              errorStyles={styles.errorStyles}
               rules={{
                 required: true, 
                 pattern: {
@@ -98,6 +100,7 @@ export const ProfileScreen = (props: any) => {
               name={'password'}
               errors={errors} 
               label={'Password:'}
+              errorStyles={styles.errorStyles}
               rules={{
                 required: true, 
                 pattern: {
@@ -149,7 +152,7 @@ const styles = StyleSheet.create({
   errorStyles: {
     color: 'red',
     alignSelf: 'flex-start',
-    height: 50,
+    minHeight: 50,
   },
   inputContainer: {
     width:'80%',
