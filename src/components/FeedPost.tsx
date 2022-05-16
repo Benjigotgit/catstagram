@@ -1,33 +1,51 @@
 import { View, Text, Image, TouchableOpacity, FlatList, StyleSheet, Dimensions } from 'react-native'
 import React, {useState, useEffect} from 'react'
 import { BASE_URL_IMAGE } from 'services'
-import { Post } from 'models'
+import { Post, PostDetailsScreenProps } from 'models'
 import { SCREEN_WIDTH } from 'constants/AppContants'
+import { CAT404 } from '@app/assets'
 
 
-export const FeedPost = (props: Post) => {
+export const FeedPost = (props: FeedPostProps) => {
   const [src, setSrc] = useState<string>('')
-
+  const [loading, setLoading] = useState<boolean>(true)
   useEffect(() => {
     
     (async function() { //checks if post image returns status 200
       const image = await fetch(BASE_URL_IMAGE+props.image)
       .then((resp: any) => {
-        if(resp.status === 200) setSrc(resp.url)
-        else throw new Error('No available Image')
+        if(resp.status === 200) {
+          setSrc(resp.url)
+        }
+        else {
+          throw new Error('No available Image')
+        }
       })
-      .catch((err: any) =>  {setSrc('')})
+      .catch((err: any) =>  {setSrc('404')})
+
+      setLoading(false)
     })()
   }, [])
 
   return (
-    <TouchableOpacity style={styles.container}>
+    <TouchableOpacity 
+      disabled={loading} 
+      onPress={() => {
+        if(src != '404') props.onPress(props)
+        else props.onPress(false)
+      }} 
+      style={styles.container}
+    >
+      {!loading ? (
+        <Image  style={styles.image}
+          source={src && src!='404' ? {uri: src} : CAT404} 
+          resizeMode={src ? undefined : 'contain' }
+        /> 
+      ) : <View style={styles.container} />
 
-      <Image style={styles.image}
-        defaultSource={{uri: ''}}
-        source={src ? {uri: src} : require('../assets/cat-404.jpeg')} 
-        resizeMode={'repeat'}
-      /> 
+
+}
+
     </TouchableOpacity>
   )
 
@@ -40,7 +58,12 @@ const styles = StyleSheet.create({
   },
   image: {
     flex: 1,
-    marginBottom: 5,
-    marginHorizontal: 2.5
+    width: undefined,
+    height: undefined,
+
+    marginBottom: 2,
+    marginHorizontal: 1,
+    backgroundColor: 'white',
+
   }
 })

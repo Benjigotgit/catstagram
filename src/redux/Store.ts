@@ -13,12 +13,13 @@ const persistConfig = {
 
 const middlewares = [thunk];
 
+
 export default function configureStore() {
   const enhancer = compose(applyMiddleware(...middlewares));
   const persistedReducer = persistReducer(persistConfig, AppPersistedReducer);
   const store = createStore(
-    combineReducers({persistedReducer, form: reducer, reducer: AppReducer}),
-    enhancer,
+      combineReducers({persistedReducer, reducer: AppReducer}),
+      enhancer,
   );
   const persistor = persistStore(store);
   return {store, persistor};

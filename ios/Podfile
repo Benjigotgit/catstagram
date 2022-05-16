@@ -19,6 +19,7 @@ target 'catstagram' do
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
 
+
   target 'catstagramTests' do
     inherit! :complete
     # Pods for testing

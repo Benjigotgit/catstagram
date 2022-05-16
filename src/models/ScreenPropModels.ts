@@ -1,5 +1,8 @@
 import { Post } from 'models'
 
-export interface PostDetailsScreenProps extends Post{
-  imagesrc?: any
+export interface PostDetailsScreenProps {
+  navigation: any;
+  route: {
+    params: Post
+  }
 }

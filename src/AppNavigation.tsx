@@ -4,38 +4,64 @@ import React from 'react'
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import Ionicons  from 'react-native-vector-icons/Ionicons'
+import { useDispatch } from "react-redux";
+import { ReduxDispatcher } from 'redux/services/redux-dispatcher';
 
-const Stack = createNativeStackNavigator()
+const ProfileStack = createNativeStackNavigator()
+const AboutStack = createNativeStackNavigator()
+const MainFeedStack = createNativeStackNavigator()
 const Tab = createBottomTabNavigator()
 
-const AppStack = () => {
+
+
+const ProfileScreenStack = () => {
   return (
-    <Stack.Navigator screenOptions={{headerShown: true}}>
-      <Stack.Screen name={'HomeScreen'} component={HomeScreen}></Stack.Screen>
-      <Stack.Screen name={'PostDetailsScreen'} component={HomeScreen}></Stack.Screen>
-      <Stack.Screen name={'ProfileScreen'} component={HomeScreen}></Stack.Screen>
-      <Stack.Screen name={'AboutScreen'} component={HomeScreen}></Stack.Screen>
-    </Stack.Navigator>
+    <ProfileStack.Navigator screenOptions={{headerShown: true}}>
+      <ProfileStack.Screen name={'ProfileScreen'} component={ProfileScreen}></ProfileStack.Screen>
+    </ProfileStack.Navigator>
+  )
+}
+
+const AboutScreenStack = () => {
+  return (
+    <AboutStack.Navigator screenOptions={{headerShown: true}}>
+      <AboutStack.Screen name={'AboutScreen'} component={AboutScreen}></AboutStack.Screen>
+    </AboutStack.Navigator>
+  )
+}
+
+const MainFeedScreenStack = () => {
+  return (
+    <MainFeedStack.Navigator screenOptions={{headerShown: true}}>
+      <MainFeedStack.Screen name={'HomeScreen'} component={HomeScreen}></MainFeedStack.Screen>
+      <MainFeedStack.Screen name={'PostDetailsScreen'} component={PostDetailsScreen}></MainFeedStack.Screen>
+    </MainFeedStack.Navigator>
   )
 }
 
 export const TabNavigator = () => {
+  ReduxDispatcher.getInstance().setDispatcher(useDispatch())
+
   return (
       <Tab.Navigator 
+    
         tabBarOptions={{
           showLabel: false,
+          
+        }}
+        screenOptions={{
+          headerShown: false
         }}
       >
-        <Tab.Screen name="HomeScreen" component={HomeScreen} /> 
-        <Tab.Screen name="ProfileScreen" component={ProfileScreen} />
-        <Tab.Screen name="AboutScreen" component={AboutScreen} />
+        <Tab.Screen name="Home" component={MainFeedScreenStack} /> 
+        <Tab.Screen name="Profile" component={ProfileScreenStack} />
+        <Tab.Screen name="About" component={AboutScreenStack} />
       </Tab.Navigator>
   )
 }
 export default () => {
   return(
     <NavigationContainer>
-      {/* <AppStack /> */}
       <TabNavigator/>
     </NavigationContainer>
   )

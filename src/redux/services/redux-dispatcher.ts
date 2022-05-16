@@ -15,6 +15,7 @@ export class ReduxDispatcher{
     }
 
     dispatch(actionType:string,payloadData?:any){
+        console.log('ReduxDispacter')
         if(this.dispatcher){
             this.dispatcher({type:actionType,payload:payloadData});
         }

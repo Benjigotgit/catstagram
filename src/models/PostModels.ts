@@ -14,3 +14,7 @@ export interface Comment {
   timestamp_updated: string;
   timestamp_created: string;
 }
+
+export interface FeedPostProps extends Post{
+  onPress: Function 
+}

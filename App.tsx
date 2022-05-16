@@ -2,12 +2,11 @@
 
 import AppNavigation from './src/AppNavigation';
 import React from 'react';
-import { Provider } from "react-redux";
+import { Provider, useSelector } from "react-redux";
 import configureStore from "./src/redux/Store";
 import { SafeAreaView, StyleSheet, View, TouchableOpacity } from 'react-native';
 import { PersistGate } from "redux-persist/integration/react";
-
-
+import { Loader } from 'components'
 const App = () => {
 
   return (
@@ -15,6 +14,7 @@ const App = () => {
       <Provider store={configureStore().store}>
         <PersistGate loading={null} persistor={configureStore().persistor}>
           <AppNavigation/>
+          <Loader />
         </PersistGate>
       </Provider>
     </SafeAreaView>
