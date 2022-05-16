@@ -1,20 +1,13 @@
-import { View, Text, TouchableOpacity, StyleSheet, FlatList, Image, ActivityIndicator} from 'react-native'
-import {useState, useEffect, useCallback} from 'react'
+import { View, StyleSheet, FlatList, ActivityIndicator} from 'react-native'
+import {useState, useEffect } from 'react'
 import React from 'react'
-import {useSelector} from 'react-redux';
-import { Post, PostDetailsScreenProps } from 'models'
-import { HttpService, BASE_URL_IMAGE, Apis, AppService } from 'services'
+import { Post,  } from 'models'
+import { HttpService, Apis, AppService } from 'services'
 import { FeedPost } from 'components'
-import { Loader } from 'components'
-import axios from 'axios'
-import { ReduxDispatcher } from 'redux/services/redux-dispatcher';
- 
-
 
 export const HomeScreen = ({navigation}: any) => {
   const [posts, setPosts] = useState<Post[]>([])
   const [loading, setLoading] = useState<boolean>(true)
-  const [hasError, setHasError] = useState<boolean>(false)
   
   useEffect(() => {
     getPosts()
@@ -28,12 +21,10 @@ export const HomeScreen = ({navigation}: any) => {
       const resp = await HttpService.getInstance().get(Apis.POSTS)
       data = resp.data
       console.log('RESPONSE getPosts() ===> ', JSON.stringify(data))
-      setHasError(false)
     } catch (e){
       console.error('ERROR getPosts ', JSON.stringify(e))
       AppService.showAlert('Opps... Error', JSON.stringify(e))
       data = []
-      setHasError(true)
     }
     setPosts(data)
     AppService.hideLoading()

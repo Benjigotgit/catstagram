@@ -1,6 +1,5 @@
 import {AsyncStorage} from 'react-native';
 import {applyMiddleware, combineReducers, compose, createStore} from 'redux';
-import {reducer} from 'redux-form';
 import {persistReducer, persistStore} from 'redux-persist';
 import thunk from 'redux-thunk';
 import AppReducer from './reducers/AppReducer';

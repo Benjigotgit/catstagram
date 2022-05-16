@@ -12,16 +12,16 @@ export const FeedPost = (props: FeedPostProps) => {
   useEffect(() => {
     
     (async function() { //checks if post image returns status 200
-      const image = await fetch(BASE_URL_IMAGE+props.image)
-      .then((resp: any) => {
-        if(resp.status === 200) {
-          setSrc(resp.url)
-        }
-        else {
-          throw new Error('No available Image')
-        }
-      })
-      .catch((err: any) =>  {setSrc('404')})
+      await fetch(BASE_URL_IMAGE+props.image)
+        .then((resp: any) => {
+          if(resp.status === 200) {
+            setSrc(resp.url)
+          }
+          else {
+            throw new Error('No available Image')
+          }
+        })
+        .catch((err: any) =>  {setSrc('404');})
 
       setLoading(false)
     })()
@@ -29,23 +29,17 @@ export const FeedPost = (props: FeedPostProps) => {
 
   return (
     <TouchableOpacity 
+      style={styles.container}
       disabled={loading} 
       onPress={() => {
         if(src != '404') props.onPress(props)
         else props.onPress(false)
       }} 
-      style={styles.container}
     >
-      {!loading ? (
-        <Image  style={styles.image}
-          source={src && src!='404' ? {uri: src} : CAT404} 
-          resizeMode={src ? undefined : 'contain' }
-        /> 
-      ) : <View style={styles.container} />
-
-
-}
-
+      {!loading 
+        ? <Image  style={styles.image} source={src && src!='404' ? {uri: src} : CAT404} /> 
+        : <View style={styles.container} />
+      }
     </TouchableOpacity>
   )
 
@@ -60,7 +54,7 @@ const styles = StyleSheet.create({
     flex: 1,
     width: undefined,
     height: undefined,
-
+    resizeMode: 'contain',
     marginBottom: 2,
     marginHorizontal: 1,
     backgroundColor: 'white',

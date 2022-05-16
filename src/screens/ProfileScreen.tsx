@@ -5,15 +5,16 @@ import { ImageSelectorImageProps, UserCreation } from 'models'
 import { HttpService, Apis, AppService } from 'services'
 
 import { useForm, Controller, FieldValues } from 'react-hook-form';
+import { ControllerTextInput } from 'components/ControllerTextInput'
 
 export const ProfileScreen = (props: any) => {
 
   const [loading, setLoading] = useState<boolean>(true)
 
-useEffect(() => {
-},[])
+  useEffect(() => {
+  },[])
 
-const { control, handleSubmit, formState: { errors, isValid }, setError ,setValue, getValues } = useForm();
+  const { control, handleSubmit, formState: { errors, isValid }, setError ,setValue, getValues } = useForm();
 
 
 
@@ -42,116 +43,77 @@ const { control, handleSubmit, formState: { errors, isValid }, setError ,setValu
 
   return (
     <View style={styles.container}>
+      <View style={styles.uploadCommentContainer}>
 
-    <View style={styles.uploadCommentContainer}>
-      <Controller 
-          control={control}
-          name={'firstName'} 
-          rules={{
-            required: false,
-            pattern: {
-                value: /^[a-zA-Z ]*$/,
-                message: 'Invalid first name',
-            }
-        }}
-          render={({ field: { onChange, value } }) => (
-            <View style={styles.inputContainer}>
-                            <Text style={styles.labelStyles}>First Name:</Text>
+            <ControllerTextInput 
+              control={control}
+              name={'firstName'}
+              errors={errors} 
+              label={'First Name:'}
+              rules={{
+                required: false,
+                pattern: {
+                    value: /^[a-zA-Z ]*$/,
+                    message: 'Invalid first name',
+                }
+              }}
+              placeholder="First name..."
+              onChangeText={(val: string) => {(setValue('firstName', val))}}
+            />
 
-              <TextInput
-                placeholder="First Name..."
-                value={value}
-                onChangeText={(val) => {onChange(val);(setValue('firstName', val))}}
-                style={styles.inputStyle} />
-              <Text style={styles.errorStyles}>{errors['firstName'] && errors['firstName'].message}</Text>
+            <ControllerTextInput 
+              control={control}
+              name={'lastName'}
+              errors={errors} 
+              label={'Last Name:'}
+              rules={{
+                required: false, 
+                pattern: {
+                  value: /^[a-zA-Z ]*$/,
+                  message: 'Invalid last name',
+                }
+              }}
+              placeholder="Last name..."
+              onChangeText={(val: string) => {(setValue('lastName', val))}}
+            />
 
-            </View>
-          )}      />
+            <ControllerTextInput 
+              control={control}
+              name={'email'}
+              errors={errors} 
+              label={'Email:'}
+              rules={{
+                required: true, 
+                pattern: {
+                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
+                  message: "Invalid email" 
+                }
+              }}
+              placeholder="Email..."
+              onChangeText={(val: string) => {(setValue('email', val))}}
+            />
 
-     
-      <Controller 
-          control={control}
-          name={'lastName'} 
-          rules={{
-            required: false,
-            pattern: {
-                value: /^[a-zA-Z ]*$/,
-                message: 'Invalid last name',
-            }
-        }}
-          render={({ field: { onChange, value } }) => (
-            <View style={styles.inputContainer}>
-                            <Text style={styles.labelStyles}>Last Name:</Text>
+            <ControllerTextInput 
+              control={control}
+              name={'password'}
+              errors={errors} 
+              label={'Password:'}
+              rules={{
+                required: true, 
+                pattern: {
+                  value:  /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[\^$*.\[\]{}\(\)?\-“!@#%&/,><\’:;|_~`])\S{8,99}$/,
+                  message: "Your password must have * 8 characters , 1 Uppercase ,1 Lowercase , 1 Numeric 1 special character" 
+                }
+              }}
+              placeholder="Password..."
+              onChangeText={(val: string) => {(setValue('password', val))}}
+            />
+            
+        <TouchableOpacity  onPress={handleSubmit(onSubmit)} style={styles.buttonStyles}>
+          <Text style={styles.textStyles}>Create User</Text>
+        </TouchableOpacity>
 
-              <TextInput
-
-                placeholder="Last name..."
-                value={value}
-                onChangeText={(val) => {onChange(val);(setValue('lastName', val))}}
-                style={styles.inputStyle} />
-              <Text style={styles.errorStyles}>{errors['lastName'] && errors['lastName']['message']}</Text>
-
-            </View>
-          )}      />
-
-<Controller 
-          control={control}
-          name={'email'} 
-          rules={{
-            required: true, 
-            pattern: {
-              value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
-              message: "Invalid email" 
-            }
-          }}
-          render={({ field: { onChange, value } }) => (
-            <View style={styles.inputContainer}>
-                            <Text style={styles.labelStyles}>Email:</Text>
-
-              <TextInput
-                placeholder="Email..."
-                value={value}
-                onChangeText={(val) => {onChange(val);setValue('email', val)}}
-                style={styles.inputStyle} />
-              <Text style={styles.errorStyles}>{errors['email'] && errors['email']['message']}</Text>
-
-            </View>
-          )}      />
-
-     
-      <Controller 
-          control={control}
-          name={'password'} 
-          rules={{
-            required: true, 
-            pattern: {
-              value:  /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[\^$*.\[\]{}\(\)?\-“!@#%&/,><\’:;|_~`])\S{8,99}$/,
-              message: "Your password must have * 8 characters , 1 Uppercase ,1 Lowercase , 1 Numeric 1 special character" 
-            }
-          }}
-        
-          render={({ field: { onChange, value } }) => (
-            <View style={styles.inputContainer}>
-              <Text style={styles.labelStyles}>Password:</Text>
-              <TextInput
-                placeholder="Password..."
-                value={value}
-                onChangeText={(val) => {onChange(val);(setValue('password', val))}}
-                style={styles.inputStyle} />
-              <Text style={styles.errorStyles}>{errors['password'] && errors['password']['message']}</Text>
-
-            </View>
-          )}      />
-
-      <TouchableOpacity  onPress={handleSubmit(onSubmit)} 
-        style={styles.buttonStyles
-      }>
-        <Text style={styles.textStyles}>Create User</Text>
-      </TouchableOpacity>
-
-
-    </View>
-
+      </View>
     </View>
   )
 }

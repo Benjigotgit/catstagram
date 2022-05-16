@@ -1,6 +1,7 @@
 import {Alert, AlertButton, AlertOptions} from 'react-native';
 import { AppAction } from 'redux/actions/AppAction';
 import { ReduxDispatcher } from 'redux/services/redux-dispatcher';
+import Toast from 'react-native-simple-toast'
 
 export class AppService {
     static showLoading = (message?: string) => {
@@ -27,17 +28,12 @@ export class AppService {
         Alert.alert(title, message, buttons, options);
     };
 
-    static showError = (titleText?: string, message?: string) => {
-        ReduxDispatcher.getInstance().dispatch(AppAction.ERROR, {
-            visible: true,
-            title: titleText,
-            error: {errorMessage: message},
-        });
-    };
+    static showToast = (message: string, delay?: number) => { 
+        //setTimeout is used because hide/showLoading interfere with showToast
+        //delay time are to be short, however it is system/performace specific, this does not happen on all machines.
+        setTimeout(() => {
+            Toast.show(message, Toast.SHORT)
+        }, delay)
+    }
 
-    static hideError = () => {
-        ReduxDispatcher.getInstance().dispatch(AppAction.ERROR, {
-            visible: false,
-        });
-    };
 }

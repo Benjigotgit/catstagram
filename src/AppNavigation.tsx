@@ -3,7 +3,6 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react'
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import Ionicons  from 'react-native-vector-icons/Ionicons'
 import { useDispatch } from "react-redux";
 import { ReduxDispatcher } from 'redux/services/redux-dispatcher';
 
@@ -44,10 +43,8 @@ export const TabNavigator = () => {
 
   return (
       <Tab.Navigator 
-    
         tabBarOptions={{
-          showLabel: false,
-          
+          showLabel: true,
         }}
         screenOptions={{
           headerShown: false

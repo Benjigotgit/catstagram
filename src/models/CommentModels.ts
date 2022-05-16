@@ -9,6 +9,5 @@ export interface Comment {
 }
 
 export interface CommentProps extends Comment{
-  containerStyle?: ViewStyle 
-  textStyle?: TextStyle
+
 }

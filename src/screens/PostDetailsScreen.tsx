@@ -13,15 +13,15 @@ export const PostDetailsScreen = (props: PostDetailsScreenProps) => {
   const [src, setSrc] = useState<string>('')
   const [post, setPost] = useState<Post>()
   const [commentText, setCommentText] = useState<string>('')
-useEffect(() => {
-  console.log('PostDetailsScreen Route.Params', props.route.params)
-  getPostDetails()
-},[])
+
+    useEffect(() => {
+      console.log('PostDetailsScreen Route.Params', props.route.params)
+      getPostDetails()
+    },[])
 
   const getPostDetails = async () => {
     !loading || setLoading(true)
     let data: Post | undefined;
-    let image: any;
     AppService.showLoading('...Loading post details')
     try{
       const resp = await HttpService.getInstance().get(Apis.POSTS+'/'+props.route.params.pk)
@@ -38,63 +38,53 @@ useEffect(() => {
   }
 
   const postComment = async () => {
-    console.log('UploadComment', commentText)
     const body = {
       text: commentText,
     }
-    console.log('postComment() Body', body)
     AppService.showLoading('...Posting comment')
     try{
       const resp = await HttpService.getInstance().post(Apis.COMMENTS, body)
-      const data = resp.data
-      console.log('postComment()', JSON.stringify(data))
-      getPostDetails()
+      console.log('postComment() successful')
+      setCommentText('')
+      // getPostDetails() call this once comment issue is resolved
     } catch (e){
       console.error('ERROR postComment ', JSON.stringify(e))
       AppService.showAlert('Opps... Error', JSON.stringify(e))
     }
-
     AppService.hideLoading()
-
+    AppService.showToast('Comment Successful', 50)
     setLoading(false)
   }
+
   return (
     <View style={styles.container}>
       <View style={styles.imageContainer}>
-         {post && post.image ? (
-         <Image  style={styles.image}
-          source={ {uri:  post ? BASE_URL_IMAGE+post.image : ''}} 
-          resizeMode={src ? undefined : 'contain' }
-        />) :  <View style={styles.imageLoader}><ActivityIndicator /></View>
-}
-</View>
+         {post && post.image 
+            ? <Image  style={styles.image} source={ {uri:  post ? BASE_URL_IMAGE+post.image : ''}} />
+            : <View style={styles.imageLoader}><ActivityIndicator /></View>
+          }
+      </View>
 
-    <View style={styles.uploadCommentContainer}>
-      <TextInput 
-        value={commentText}
-        onChangeText={setCommentText}
-        style={styles.inputStyle}
-      />
-      <TouchableOpacity onPress={postComment} style={styles.buttonStyles}>
-        <Text style={styles.textStyles}>Comment</Text>
-      </TouchableOpacity>
+      <View style={styles.uploadCommentContainer}>
+        <TextInput 
+          value={commentText}
+          onChangeText={setCommentText}
+          style={styles.inputStyle}
+        />
+        <TouchableOpacity onPress={postComment} style={styles.buttonStyles}>
+          <Text style={styles.textStyles}>Comment</Text>
+        </TouchableOpacity>
+      </View>
 
-    </View>
-
-    <View style={{flex: 1}}>
-      <Text style={styles.commentHeader}>Comments</Text>
-      {post && 
-      <FlatList
-        data={post.comments}
-        keyExtractor={(item) => item.pk.toString()}
-        renderItem={({item, index}) => <Comment {...item}/>
-
-
-      }
-
-      /> }
-
-    </View>
+      <View style={{flex: 1}}>
+        <Text style={styles.commentHeader}>Comments</Text>
+        {post && 
+        <FlatList
+          data={post.comments}
+          keyExtractor={(item) => item.pk.toString()}
+          renderItem={({item, index}) => <Comment {...item}/>}
+        /> }
+      </View>
     </View>
   )
 }
@@ -121,7 +111,7 @@ const styles = StyleSheet.create({
     height: undefined,
     marginBottom: 2,
     marginHorizontal: 1,
-
+    resizeMode: 'contain'
   },
   uploadCommentContainer: {
     marginHorizontal: '7%',

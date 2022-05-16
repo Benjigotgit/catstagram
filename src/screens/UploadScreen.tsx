@@ -1,7 +1,6 @@
-import { View, Text, TouchableOpacity, StyleSheet, Image, TextInput, Platform} from 'react-native'
+import { View, Text, TouchableOpacity, StyleSheet, Image, TextInput} from 'react-native'
 import {useState, useEffect, useCallback} from 'react'
 import React from 'react'
-import { ImageSelectorImageProps } from 'models'
 import { HttpService, Apis, AppService } from 'services'
 
 import { SCREEN_HEIGHT, SCREEN_WIDTH } from 'constants/AppContants';
@@ -73,30 +72,29 @@ useEffect(() => {
   return (
     <View style={styles.container}>
       <View style={styles.imageContainer}>          
-         <Image  style={styles.image}
+        <Image  style={styles.image}
           source={imageSelected ? {uri: imageSelected.uri} : require('../assets/cat-404.jpeg')} 
         />
-</View>
-
-    <View style={styles.uploadCommentContainer}>
-      <TextInput 
-        placeholder="Post's name..."
-        value={postName}
-        onChangeText={setPostName}
-        style={styles.inputStyle}
-      />
-      <View style={{flexDirection: 'column', width: '25%', }}>
-      <TouchableOpacity onPress={selectImage} style={[styles.buttonStyles, {marginBottom: 10}]}>
-        <Text style={styles.textStyles}>Select</Text>
-      </TouchableOpacity>
-      <TouchableOpacity disabled={!postName} onPress={uploadImage} style={styles.buttonStyles}>
-        <Text style={styles.textStyles}>Upload</Text>
-      </TouchableOpacity>
-
       </View>
 
-    </View>
+      <View style={styles.uploadCommentContainer}>
+        <TextInput 
+          placeholder="Post's name..."
+          value={postName}
+          onChangeText={setPostName}
+          style={styles.inputStyle}
+        />
 
+        <View style={{flexDirection: 'column', width: '25%'}}>
+          <TouchableOpacity onPress={selectImage} style={[styles.buttonStyles, {marginBottom: 10}]}>
+            <Text style={styles.textStyles}>Select</Text>
+          </TouchableOpacity>
+          <TouchableOpacity disabled={!postName} onPress={uploadImage} style={styles.buttonStyles}>
+            <Text style={styles.textStyles}>Upload</Text>
+          </TouchableOpacity>
+        </View>
+
+      </View>
     </View>
   )
 }
