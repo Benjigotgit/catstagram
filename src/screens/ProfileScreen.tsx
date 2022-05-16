@@ -1,92 +1,154 @@
-import { View, Text, TouchableOpacity, StyleSheet, FlatList, Image, ActivityIndicator, TextInput} from 'react-native'
-import {useState, useEffect, useCallback} from 'react'
+import { View, Text, TouchableOpacity, StyleSheet,  TextInput} from 'react-native'
+import {useState, useEffect} from 'react'
 import React from 'react'
-import {useSelector} from 'react-redux';
-import { ImageSelectorImageProps, Post, PostDetailsScreenProps } from 'models'
-import { HttpService, BASE_URL_IMAGE, Apis, AppService } from 'services'
-import { FeedPost } from 'components'
-import { Loader } from 'components'
-import axios from 'axios'
-import { ReduxDispatcher } from 'redux/services/redux-dispatcher';
-import { SCREEN_HEIGHT, SCREEN_WIDTH } from 'constants/AppContants';
-import { CAT404 } from '@app/assets'
-import moment from 'moment'
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import { ImageSelectorImageProps, UserCreation } from 'models'
+import { HttpService, Apis, AppService } from 'services'
 
-export const ProfileScreen = (props: PostDetailsScreenProps) => {
+import { useForm, Controller, FieldValues } from 'react-hook-form';
+
+export const ProfileScreen = (props: any) => {
 
   const [loading, setLoading] = useState<boolean>(true)
-  const [imageSelected, setImageSelected] = useState<ImageSelectorImageProps>()
-  const [postName, setPostName] = useState<string>('')
 
 useEffect(() => {
-  console.log('PostDetailsScreen Route.Params', props.route.params)
 },[])
 
-
-  const selectImage = async () => {
-    let result = await launchImageLibrary({mediaType: 'photo'})
-    if(result){
-      if(result.assets) setImageSelected(result.assets[0])
-      console.log(JSON.stringify(result))
-    }
-    setLoading(false)
-  }
+const { control, handleSubmit, formState: { errors, isValid }, setError ,setValue, getValues } = useForm();
 
 
-  const uploadImage = async () => {
-    if(!postName || !imageSelected) return AppService.showAlert('Hold on...', 'Please enter a proper image and name the post')
 
-    const body = {
-      name: postName,
-      image: imageSelected.uri  //having issues
-    }
-  
-    console.log('uploadImage() Body', body)
-    AppService.showLoading('...creating post')
+  const createUser = async (formData: FieldValues | UserCreation) => {  
+    AppService.showLoading('...Creating User')
 
     try{
-      const resp = await HttpService.getInstance().post(Apis.POSTS, body)
+      const resp = await HttpService.getInstance().post(Apis.USERS, formData)
       const data = resp.data
-      AppService.showAlert('Image not uploaded', 'your post was created, but was given a default image due to technical issues with formating image upload')
-      console.log('uploadImage()', JSON.stringify(data))
+      AppService.showAlert('User Successfully created')
+      console.log('createUser()', JSON.stringify(resp))
     } catch (e){
-      console.error('ERROR uploadImage ', JSON.stringify(e))
+      console.error('ERROR createUser() ', JSON.stringify(e))
       AppService.showAlert('Opps... Error', JSON.stringify(e))
     }
-
     AppService.hideLoading()
 
     setLoading(false)
   }
 
-
-
+  const onSubmit = async (data: FieldValues | UserCreation) => {
+    if(errors.email || errors.password || errors.firstName || errors.lastName) 
+    return AppService.showAlert('Please recheck form', '*Password and Email are required*')
+    createUser(data)
+  }
 
   return (
     <View style={styles.container}>
-      <View style={styles.imageContainer}>          
-         <Image  style={styles.image}
-          source={imageSelected ? {uri: imageSelected.uri} : require('../assets/cat-404.jpeg')} 
-        />
-</View>
 
     <View style={styles.uploadCommentContainer}>
-      <TextInput 
-        placeholder="Post's name..."
-        value={postName}
-        onChangeText={setPostName}
-        style={styles.inputStyle}
-      />
-      <View style={{flexDirection: 'column', width: '25%', }}>
-      <TouchableOpacity onPress={selectImage} style={[styles.buttonStyles, {marginBottom: 10}]}>
-        <Text style={styles.textStyles}>Select</Text>
-      </TouchableOpacity>
-      <TouchableOpacity disabled={!postName || !imageSelected} onPress={uploadImage} style={styles.buttonStyles}>
-        <Text style={styles.textStyles}>Upload</Text>
+      <Controller 
+          control={control}
+          name={'firstName'} 
+          rules={{
+            required: false,
+            pattern: {
+                value: /^[a-zA-Z ]*$/,
+                message: 'Invalid first name',
+            }
+        }}
+          render={({ field: { onChange, value } }) => (
+            <View style={styles.inputContainer}>
+                            <Text style={styles.labelStyles}>First Name:</Text>
+
+              <TextInput
+                placeholder="First Name..."
+                value={value}
+                onChangeText={(val) => {onChange(val);(setValue('firstName', val))}}
+                style={styles.inputStyle} />
+              <Text style={styles.errorStyles}>{errors['firstName'] && errors['firstName'].message}</Text>
+
+            </View>
+          )}      />
+
+     
+      <Controller 
+          control={control}
+          name={'lastName'} 
+          rules={{
+            required: false,
+            pattern: {
+                value: /^[a-zA-Z ]*$/,
+                message: 'Invalid last name',
+            }
+        }}
+          render={({ field: { onChange, value } }) => (
+            <View style={styles.inputContainer}>
+                            <Text style={styles.labelStyles}>Last Name:</Text>
+
+              <TextInput
+
+                placeholder="Last name..."
+                value={value}
+                onChangeText={(val) => {onChange(val);(setValue('lastName', val))}}
+                style={styles.inputStyle} />
+              <Text style={styles.errorStyles}>{errors['lastName'] && errors['lastName']['message']}</Text>
+
+            </View>
+          )}      />
+
+<Controller 
+          control={control}
+          name={'email'} 
+          rules={{
+            required: true, 
+            pattern: {
+              value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
+              message: "Invalid email" 
+            }
+          }}
+          render={({ field: { onChange, value } }) => (
+            <View style={styles.inputContainer}>
+                            <Text style={styles.labelStyles}>Email:</Text>
+
+              <TextInput
+                placeholder="Email..."
+                value={value}
+                onChangeText={(val) => {onChange(val);setValue('email', val)}}
+                style={styles.inputStyle} />
+              <Text style={styles.errorStyles}>{errors['email'] && errors['email']['message']}</Text>
+
+            </View>
+          )}      />
+
+     
+      <Controller 
+          control={control}
+          name={'password'} 
+          rules={{
+            required: true, 
+            pattern: {
+              value:  /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[\^$*.\[\]{}\(\)?\-“!@#%&/,><\’:;|_~`])\S{8,99}$/,
+              message: "Your password must have * 8 characters , 1 Uppercase ,1 Lowercase , 1 Numeric 1 special character" 
+            }
+          }}
+        
+          render={({ field: { onChange, value } }) => (
+            <View style={styles.inputContainer}>
+              <Text style={styles.labelStyles}>Password:</Text>
+              <TextInput
+                placeholder="Password..."
+                value={value}
+                onChangeText={(val) => {onChange(val);(setValue('password', val))}}
+                style={styles.inputStyle} />
+              <Text style={styles.errorStyles}>{errors['password'] && errors['password']['message']}</Text>
+
+            </View>
+          )}      />
+
+      <TouchableOpacity  onPress={handleSubmit(onSubmit)} 
+        style={styles.buttonStyles
+      }>
+        <Text style={styles.textStyles}>Create User</Text>
       </TouchableOpacity>
 
-      </View>
 
     </View>
 
@@ -98,33 +160,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
-
   },
 
-  imageContainer: {
-    width: SCREEN_WIDTH,
-    
-    height: SCREEN_HEIGHT*0.60,
-    backgroundColor: '#f7f7f7'
-  },
-  imageLoader: {
-    top: '20%'
-  },
-
-  image: {
-    flex: 1,
-    width: undefined,
-    height: undefined,
-    marginBottom: 2,
-    marginHorizontal: 1,
-    resizeMode: 'contain'
-  },
   uploadCommentContainer: {
-    marginHorizontal: '7%',
-    flexDirection: 'row',
-    alignItems: 'flex-end',
+    flexDirection: 'column',
+    alignItems: 'center',
     justifyContent: 'space-between',
-    
+    width: '100%',
     marginVertical: 20
   },
   inputStyle: {
@@ -134,15 +176,30 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderWidth: 1,
     borderColor: 'black',
-    width: '70%',
+    borderRadius: 5,
+    width: '100%',
+    marginTop: 10,
+  },
+  labelStyles: {
+    alignSelf: 'flex-start'
+  },
+  errorStyles: {
+    color: 'red',
+    alignSelf: 'flex-start',
+    height: 50,
+  },
+  inputContainer: {
+    width:'80%',
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   buttonStyles: {
     backgroundColor: '#0397f6',
-    width: '100%',
+    width: '80%',
     justifyContent:'center',
     alignItems: 'center',
     borderRadius: 5,
-    height: 30
+    height: 35,
   },
   textStyles: {
     color: 'white',

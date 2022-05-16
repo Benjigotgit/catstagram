@@ -1,4 +1,4 @@
-import { HomeScreen, ProfileScreen, AboutScreen, PostDetailsScreen } from "screens";
+import { HomeScreen, ProfileScreen, UploadScreen, PostDetailsScreen } from "screens";
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react'
 import { NavigationContainer } from '@react-navigation/native';
@@ -16,23 +16,23 @@ const Tab = createBottomTabNavigator()
 
 const ProfileScreenStack = () => {
   return (
-    <ProfileStack.Navigator screenOptions={{headerShown: true}}>
+    <ProfileStack.Navigator screenOptions={{headerShown: true, headerTitle: 'Create User'}}>
       <ProfileStack.Screen name={'ProfileScreen'} component={ProfileScreen}></ProfileStack.Screen>
     </ProfileStack.Navigator>
   )
 }
 
-const AboutScreenStack = () => {
+const UploadScreenStack = () => {
   return (
-    <AboutStack.Navigator screenOptions={{headerShown: true}}>
-      <AboutStack.Screen name={'AboutScreen'} component={AboutScreen}></AboutStack.Screen>
+    <AboutStack.Navigator screenOptions={{headerShown: true, headerTitle: 'Upload'}}>
+      <AboutStack.Screen name={'UploadScreen'} component={UploadScreen}></AboutStack.Screen>
     </AboutStack.Navigator>
   )
 }
 
 const MainFeedScreenStack = () => {
   return (
-    <MainFeedStack.Navigator screenOptions={{headerShown: true}}>
+    <MainFeedStack.Navigator screenOptions={{headerShown: true, headerTitle: 'Feed'}}>
       <MainFeedStack.Screen name={'HomeScreen'} component={HomeScreen}></MainFeedStack.Screen>
       <MainFeedStack.Screen name={'PostDetailsScreen'} component={PostDetailsScreen}></MainFeedStack.Screen>
     </MainFeedStack.Navigator>
@@ -54,8 +54,8 @@ export const TabNavigator = () => {
         }}
       >
         <Tab.Screen name="Home" component={MainFeedScreenStack} /> 
+        <Tab.Screen name="Upload" component={UploadScreenStack} />
         <Tab.Screen name="Profile" component={ProfileScreenStack} />
-        <Tab.Screen name="About" component={AboutScreenStack} />
       </Tab.Navigator>
   )
 }
