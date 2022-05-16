@@ -5,6 +5,7 @@ import {useSelector} from 'react-redux';
 import { Post, PostDetailsScreenProps } from 'models'
 import { HttpService, BASE_URL_IMAGE, Apis, AppService } from 'services'
 import { SCREEN_HEIGHT, SCREEN_WIDTH } from 'constants/AppContants';
+import { Comment } from 'components';
 
 export const PostDetailsScreen = (props: PostDetailsScreenProps) => {
 
@@ -75,21 +76,20 @@ useEffect(() => {
         style={styles.inputStyle}
       />
       <TouchableOpacity onPress={postComment} style={styles.buttonStyles}>
-        <Text style={styles.textStyles}>Upload</Text>
+        <Text style={styles.textStyles}>Comment</Text>
       </TouchableOpacity>
 
     </View>
 
     <View style={{flex: 1}}>
+      <Text style={styles.commentHeader}>Comments</Text>
       {post && 
       <FlatList
-        
         data={post.comments}
         keyExtractor={(item) => item.pk.toString()}
-        renderItem={({item, index}) => 
-        <View style={{marginBottom: 10}}>
-          <Text>{item.text}</Text>
-        </View>
+        renderItem={({item, index}) => <Comment {...item}/>
+
+
       }
 
       /> }
@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
 
   imageContainer: {
     width: SCREEN_WIDTH,
-    height: SCREEN_HEIGHT*0.60,
+    height: SCREEN_HEIGHT*0.55,
     backgroundColor: '#f7f7f7'
   },
   imageLoader: {
@@ -128,12 +128,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginVertical: 20
+    marginVertical: 10
   },
   inputStyle: {
     color: 'black',
     fontSize: 15,
-    height: 30,
+    height: 37,
     backgroundColor: 'white',
     borderWidth: 1,
     borderColor: 'black',
@@ -145,11 +145,17 @@ const styles = StyleSheet.create({
     justifyContent:'center',
     alignItems: 'center',
     borderRadius: 5,
-    height: 30
+    height: 37
   },
   textStyles: {
     color: 'white',
     fontWeight: 'bold'
   },
+  commentHeader: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    alignSelf: 'center',
+    marginBottom: 10
+  }
 })
 

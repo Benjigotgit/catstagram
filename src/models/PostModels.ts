@@ -1,3 +1,5 @@
+import { Comment } from 'models'
+
 export interface Post {
   pk: number;
   name: string;
@@ -7,13 +9,7 @@ export interface Post {
   comments: Comment[]
 }
 
-export interface Comment {
-  pk: number;
-  text: string;
-  entry: number;
-  timestamp_updated: string;
-  timestamp_created: string;
-}
+
 
 export interface FeedPostProps extends Post{
   onPress: Function 

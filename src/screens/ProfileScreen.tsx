@@ -172,7 +172,8 @@ const styles = StyleSheet.create({
   inputStyle: {
     color: 'black',
     fontSize: 15,
-    height: 30,
+    height: 37,
+    paddingHorizontal: 10,
     backgroundColor: 'white',
     borderWidth: 1,
     borderColor: 'black',
